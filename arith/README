@@ -1,0 +1,93 @@
+------------
+Arith README
+------------
+Juliana Rosen (jrosen33) and Sara Francis (sfranc07)
+
+----------
+Thank you:
+----------
+TA Jeremy for reminding us that when doing the int64_t get function we
+need to right shift with a signed int64_t to keep all ones to the left 
+of our word so that the compiler still reads it as negative
+TA randy for pointing out that when we were casting the current element in our
+apply function to get the a, b, c, d, pb, pr values from the code word in 
+decompression, that we needed to dereference the current element because 
+it is a pointer to our element in the array we are mapping. Before that, we
+were getting all the same a values, all the same b values, all the same c 
+values, and all the same d values, but our Pr and Pb values were different.
+TA Matt and Stephanie for helping us with endianess and that we should use 
+bitpack to switch the order of the bits
+Niel helped us with checking our endianess.
+Christopher/Tina helped us with a freeing issue for our UArray2_T of codewords.
+Thanks guys!
+
+------------
+Architecture
+------------
+40image.c:
+        -Main file that calls either the decompression or compression
+        steps based on the arguments provided
+bitpack.c:
+        -Functions for getting bytes from a field in a 64 bit int
+        -Functions for updating a field within a uint64
+        -Functions to check a field can fit into a specific number
+        of bits
+        -Used to pack and unpack the 32 bit codewords that contain
+        the info for each 2 by 2 block of pixels
+
+For compression:
+compression.c/compression.h:
+        -Calls the main functions from the other files of trimmed_array, 
+        video_color_array, blocK_array, and packing
+        -Calls print function to print array of codewords with header
+trimmed_array.c/trimmed_array.h:
+        -This contains the functions used to trim the array to even 
+        width/height and returns to compression a Pnm struct with the new
+        image info
+video_color_array.c/video_color_array.h:
+        -This file has functions to convert the rgb values of each pixel to
+        the video color values and returns a UArray2b with a blocksize of 2
+        of these values with each pixel in the proper place
+block_array.c/block_array.h:
+        -This file creates a UArray2 where each index represents the info
+        for each 2 by 2 block converted into the Y,a,b,c,d values
+packing.c/packing.h:
+        -This file creates a UArray2 of uint64_t and packs the info
+        for each block into a 32 bit code word that it stores
+
+For Decompression:
+decompression.c/decompression.h:
+        -File calls the appropriate function from other files in order
+        to turn a 32 bit codeword into a rgb pixel
+        -Prints the final pnm image that contains the array of decompressed
+        rgb pixels
+read_compression.c/read_compression.h:
+        -This file read in the header from the file and creates a 
+        Pnm struct with a UArray2 to be filled by rgb pixels
+        -It also creates a UArray2 of uint64 that is filled with the
+        information from the file
+pixel_array.c/pixel_array.h:
+        -This file is responsible for turning a unit64 into 4 rgb pixels
+        that are then added to the pnm struct from read_compression
+
+------------------
+What's Implemented
+------------------
+- As far as we know everything has been implemented properly
+
+-----
+Time:
+-----
+Design: 3.5 hours
+Coding: 
+10/18 - 30 min
+10/19 - 2.75 hours
+10/20 - 1.5 hours
+10/21 - 1.5 hours
+10/22 - 2 hours
+10/23 - 3 hours
+10/24 - 4 hours
+10/25 - 4 hours
+10/26: 4 hours
+Total Coding: 22.25 hrs
+Total: 22.75 hrs + 3.5 hrs = 25.75 hrs
